@@ -169,3 +169,53 @@ class Solution:
                 return i+1, j
             else:
                 return i,j+1
+            
+
+# Q3
+"""
+Description - https://leetcode.com/problems/reshape-the-matrix/
+Level - Easy
+Title - Reshape Matrix
+---------------------------------------
+Question - 
+-> Reshape a mxn matrix into rxc
+-> 
+1 2 
+3 4   r = 1,c = 4 ---> Soln: 1 2 3 4
+
+Thoughts - 
+-> Flatten the array so that it is a single list of shape 1 x (m*n)
+-> Compare the size with the new dimensions r*c. If the size matches, the reshaping is possible.
+-> To reshape, we need to slice the flattened array by selecting elements that'll go row-wise (refer to dry run eg in code below)
+-> Time: O(n*m + r*c); Space: O(r*c + m*n)
+"""     
+def reshape(mat,r,c):
+    flat_mat = [] # flattened matrix with dimensions 1 x (m*n)
+    res = [] # resultant matrix with new dimensions r x c
+
+    M, N = len(mat), len(mat[0]) # original dimensions, m x n
+
+    for row in range(M):
+        flat_mat.extend(mat[row]) # [[1,2][3,4]] ---> [1,2,3,4]
+    
+    # Check validity of r x c dimensions
+    if not (r*c == len(flat_mat)):
+        # Invalid dimensions
+        return mat 
+    else:# Reshape
+        # [[0,  1,  2,  3],
+        #  [4,  5,  6,  7],    m x n = 3 x 4             ->       r x c = 2 x 6         [[0,  1,  2,  3,  4, 5],
+        # [8,  9,  10, 11]]                                                               [6,  7,  8,  9,  10, 11]]
+
+        # flat_mat =                                [0,   1,  2,  3,  4,  5,  6,  7,  8,  9,  10  ,11]
+        # first_row_needed = start=i*c=0*6=0       start                     end
+        #                    end=i*c+c=0*6+6=6
+
+        # second_row_needed = start=i*c=1*6=6
+        #                     end=i*c+c=1*6+6=12                            start                       end
+        for i in range(r):
+            start = i*c
+            end = i*c + c
+            res.append(flat_mat[start: end])
+    return res
+    
