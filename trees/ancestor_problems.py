@@ -1,4 +1,7 @@
-''' Ancestor Problems from Leetcode '''
+''' Ancestor Problems from Leetcode - generally think DFS
+1. Botton up dfs = Propagate some value up each node as you return from leaf to root
+2. Top down dfs = Evaluate nodes from root to leaf
+'''
 
 # Q1
 """
@@ -89,3 +92,64 @@ def LCA(root, p,q):
 
     # Propogate the "found" value (p or q) up the tree
     return left if left else right 
+
+#Q3
+"""
+Description - https://leetcode.com/problems/maximum-difference-between-node-and-ancestor/description/
+Title - Maximum difference between node and ancestor
+---------------------------------------
+Question -
+-> Find the maximum absolute difference between a node and its ancestors
+-> Eg:
+            8
+        3       10    Soln: |8-1| = 7
+    1       6        
+
+Thoughts - 
+-> Brute Force: For every root, check its difference with every child and maintain a global variable to check the max difference
+-> Time: O(n^2) -> check every child for every node, where n=#no. of nodes; 
+
+-> Optimal: 
+    -> Maximum difference b/w a node and it's ancestor = max((|root - min_across_subtrees|), (|root - max_across_subtrees|)) -> this is because we want max absolute difference
+    -> In our eg:, max_difference = max(|8 - 1|, |8 -10|)) = max(7,2) = 7
+    -> The maximum difference is possible on any subtree and not necessarily the root, so we need to dfs and update max difference at each subtree
+    -> To update max difference at each subtree, we need to find the minimum and the maximum across left and right subtrees recursively for each subtree
+    -> Time: O(n) --> check each node once
+"""
+
+def max_abs_diff(root):
+    """
+    Max diff = MAX ((Root - min_across_subtrees), (Root - max_across_subtrees)) and we calculate this for every subtree using DFS
+    """
+    max_difference = 0
+
+    def dfs(node):
+        """
+        DFS to leaves to calculate min and max of both left and right subtrees of root node and maintain global max_difference
+
+        Returns: min_across_subtrees, max_across_subtrees
+        """
+        nonlocal max_difference
+        vals = [root.val] # max_difference should have a choice between root - (min(left_subtree), max(left_subtree), min(right_subtree) OR max(rightsubtree)), vals hold the choices
+
+        if root.left: 
+            # Left subtree choices
+            min_L, max_L = dfs(root.left)
+            vals.append(min_L, max_L)
+        if root.right:
+            # Right subtree choices
+            min_R, max_R = dfs(root.right)
+            vals.append(min_R, max_R)
+        
+        minimum, maximum = min(vals), max(vals) # return value of dfs function
+
+        # max_difference = max(itself, difference_with_min, difference_with_max)
+        # This is because we've to take the absolute difference. For any tree, the max difference would not exceed the difference between root - (minimum_across_subtrees) OR root - (maximum_across_subtrees)
+
+        max_difference = max(max_difference, abs(node.val - minimum), abs(node.val - maximum))
+
+        return minimum, maximum
+    
+    # First call
+    _,_ = dfs(root)
+    return max_difference
