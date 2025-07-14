@@ -168,4 +168,26 @@ Level - Hard
 Question - 
 -> parent[i] = Parent of ith node, root of tree is node 0
 -> Find kth ancestor of a given node i.e kth node in the path from that node to the root node
+
+Thoughts - 
+-> Brute Force:
+    -> Since we are given the node from where to start our path to the root, we just continually need to find the parent, k times which is possible given the parent list
+    -> Time: O(q * k), where k=number of times parent need to be found, q=number of times the getKthAncestor function is called
+
+-> Optimal:
+    
 """
+# Brute Force
+class TreeAncestor:
+
+    def __init__(self, n, parent):
+        self.parent = parent
+
+    def getKthAncestor(self, node, k):
+        while k > 0 and node != -1:
+            node = self.parent[node]
+            k -= 1
+        return node
+
+# Optimal - Binary Lifting(DP)
+#todo
