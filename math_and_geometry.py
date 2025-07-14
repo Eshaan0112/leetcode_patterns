@@ -219,3 +219,29 @@ def reshape(mat,r,c):
             res.append(flat_mat[start: end])
     return res
     
+# Q4
+"""
+Description - https://leetcode.com/problems/toeplitz-matrix/
+Level - Easy
+Title - Toeplitz Matrix
+---------------------------------------
+Question - 
+-> Toeplitz matrix must have same elements across each diagonal
+-> Simple diagonal by diagonal traversal
+-> If matrix[i][j] is an element then its diagonal elements are matrix[i+1][j+1] and so on
+-> Time: O(n^2)
+"""
+
+def isToeplitzMatrix(matrix):
+        """
+        Diagonal by diagonal traversal
+        """
+        ROWS,COLS = len(matrix), len(matrix[0])
+
+        for r in range(ROWS):
+            for c in range(COLS):
+                if (r+1)==ROWS or (c+1)==COLS: # check boundaries
+                    break
+                if matrix[r][c] != matrix[r+1][c+1]: # elements in a dagonal must be the same
+                    return False
+        return True

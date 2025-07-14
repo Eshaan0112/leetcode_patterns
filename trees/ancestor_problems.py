@@ -7,6 +7,7 @@
 """
 Description - https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/description/
 Title - Lowest Common Ancestor of a BST
+Level - Medium
 ---------------------------------------
 Question - 
 -> Given a BST and two nodes find lowest common ancestor of the two
@@ -57,6 +58,8 @@ def LCA(root,p,q):
 """
 Description - https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/description/
 Title - Lowest Common Ancestor of a Binary Tree
+Level - Medium
+
 ---------------------------------------
 Question - 
 -> Find lowest common ancestor of two nodes in a binary tree
@@ -97,6 +100,8 @@ def LCA(root, p,q):
 """
 Description - https://leetcode.com/problems/maximum-difference-between-node-and-ancestor/description/
 Title - Maximum difference between node and ancestor
+Level - Medium
+
 ---------------------------------------
 Question -
 -> Find the maximum absolute difference between a node and its ancestors
@@ -153,3 +158,14 @@ def max_abs_diff(root):
     # First call
     _,_ = dfs(root)
     return max_difference
+
+#Q4
+"""
+Description - https://leetcode.com/problems/kth-ancestor-of-a-tree-node/
+Title - Kth ancestor of a tree node
+Level - Hard
+---------------------------------------
+Question - 
+-> parent[i] = Parent of ith node, root of tree is node 0
+-> Find kth ancestor of a given node i.e kth node in the path from that node to the root node
+"""
