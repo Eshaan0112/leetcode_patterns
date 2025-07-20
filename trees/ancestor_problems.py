@@ -1,6 +1,5 @@
 ''' Ancestor Problems from Leetcode - generally think DFS
-1. Botton up dfs = Propagate some value up each node as you return from leaf to root
-2. Top down dfs = Evaluate nodes from root to leaf
+Botton up dfs = Propagate some value(s) up each node as you return from leaf to root
 '''
 
 # Q1
