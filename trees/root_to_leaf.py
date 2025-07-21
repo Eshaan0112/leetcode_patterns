@@ -60,7 +60,53 @@ def tree_path(root):
     
     dfs(root, "")
     return res
-    
-    
+
+''' Path Sum Questions '''
+# Q2
+"""
+Description - https://leetcode.com/problems/path-sum/
+Title - Path Sum
+Level - Easy
+---------------------------------------
+Question - 
+-> Return true if a root-to-leaf path exists such that adding up all values along the path equals a given, targetSum
+-> Eg: targetSum = 7
+            1
+        2       3
+    4       6
+    Soln: True (1->2->4 = 1 + 2 + 4 == 7)
+
+Thoughts -
+-> Visit each node and at whenever the path reaches a leaf, check the sum of the path (including current node). If it is == targetSum, the return value would be True, else keep looking
+-> Time: O(n) --> Visiting each node once
+"""
+
+class Solution:
+    def hasPathSum(self, root,targetSum):
+        res = False
+
+        def dfs(node, path):
+            """
+            Visits each node
+            """
+            nonlocal res # to see the value once amongst both functions
+
+            # Base Cases
+            if not node: return 
+
+            if not node.left and not node.right:
+                if sum(path)+node.val == targetSum:
+                    print("Found")
+                    res = True
+                    return 
+            else:
+                path.append(node.val) # add node to explore paths with that node
+                dfs(node.left, path)
+                dfs(node.right, path)
+                path.pop() # remove node once path with that node explored --> dry run through this eg: root = [1,-2,-3,1,3,-2,null,-1] to understand
+
+        dfs(root,[])
+        return res
+                            
             
             
