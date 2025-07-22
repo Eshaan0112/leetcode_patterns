@@ -96,10 +96,10 @@ class Solution:
 
             if not node.left and not node.right:
                 if sum(path)+node.val == targetSum:
-                    print("Found")
                     res = True
                     return 
             else:
+                # Here we dfs using path that doesn't include the node we want to explore - it only includes nodes from root->parent
                 path.append(node.val) # add node to explore paths with that node
                 dfs(node.left, path)
                 dfs(node.right, path)
@@ -107,6 +107,42 @@ class Solution:
 
         dfs(root,[])
         return res
-                            
+                   
+
+# Q3
+"""
+Description - https://leetcode.com/problems/path-sum-ii/
+Title - Path Sum 2
+Level - Medium
+---------------------------------------
+Question -       
+-> Add all paths from root to leaf that add up to a given sum
+
+Thoughts - 
+-> Very similar to PathSum
+"""   
+def pathSum(self, root, targetSum):
+        paths = []
+        
+        def dfs(node, curr_path):
+            """ Visit each node """
+            
+            if not node: return
+
+            if not node.left and not node.right:
+                if sum(curr_path) + node.val == targetSum:
+                    curr_path.append(node.val)                    
+                    paths.append(curr_path.copy()) # if .copy is not used, we end up appending a reference to curr_path to paths, which will make changes as we change curr_path. So, we need to append a snapshot of it using .copy()
+                    curr_path.pop() # need to make sure curr_path is till parent of node only
+                    return
+            else:
+                curr_path.append(node.val) 
+                dfs(node.left, curr_path)
+                dfs(node.right, curr_path)
+                curr_path.pop()
+
+        dfs(root,[])
+
+        return paths
             
             
