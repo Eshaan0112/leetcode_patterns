@@ -120,8 +120,9 @@ Question -
 
 Thoughts - 
 -> Very similar to PathSum
+-> Time: O(n) --> visit each node once
 """   
-def pathSum(self, root, targetSum):
+def pathSum(root, targetSum):
         paths = []
         
         def dfs(node, curr_path):
@@ -144,5 +145,6 @@ def pathSum(self, root, targetSum):
         dfs(root,[])
 
         return paths
+
             
             
