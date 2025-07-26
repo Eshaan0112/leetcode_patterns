@@ -1,4 +1,4 @@
-''' Graph problems from Neetcode 150
+''' DFS problems from Neetcode 150
 
 DFS approach for grid traversal(recursive or iterative stack)
     def solution(grid):
@@ -81,6 +81,12 @@ Description - https://neetcode.io/problems/max-area-of-island?list=neetcode150
 Title - Max Area of islands
 Level - Medium
 ---------------------------------------
+Question - 
+-> Calculate max area across a grid 
+
+Thoughts - 
+-> Similar to Q1, just need to calculate area of each island to see which one is max
+-> Time: O(m*n*4^(m*n))
 """
 class Solution:
     def maxAreaOfIsland(grid):
@@ -124,6 +130,58 @@ class Solution:
                     maxArea = max(maxArea, area)
         return maxArea
 
+# Q3
+"""
+Description - https://neetcode.io/problems/clone-graph?list=neetcode150
+Title - Clone Graph
+Level - Medium
+---------------------------------------
+Question - 
+-> Create a deep copy of every node in a given graph
+-> Eg:
+    INPUT: [[2],[1,3],[2]] => Node1:(1,[2]) Node2:(2,[1,3]), Node3: (3,[2])
+    SOLN: [[2],[1,3],[2]]
 
+Thoughts -
+-> DFS on each node and create nodes as encountered
+-> To make sure we don't creat multiple copies of the same node (if a node is a neighbor of 2 or more nodes), once we create a node, we keep track of it
+-> Time: O(n), n = V+E where V=vertices, E=edges
+"""
 
+def cloneGraph(node):
+        """
+        Given:
+        class Node:
+            def __init__(self, val = 0, neighbors = None):
+                self.val = val
+                self.neighbors = neighbors if neighbors is not None else []
+        """
+
+        # Setup
+        mapping_of_nodes = {} # {given_node: created_node} to keep track of which nodes have been created
+        deep_copied_graph = None # if given node is None, then we can just return this
+
+        def dfs(node):
+            """
+            Visit each node's neighbors and create them if they have not already been created.
+
+            """
+            if node in mapping_of_nodes: # node already created
+                return mapping_of_nodes[node] # return the created nodes; mostly these will be created neighbors
+                
+            # Create a deep copy and add to mapping
+            deep_node = Node(node.val) # create a new node with the needed value
+            mapping_of_nodes[node] = deep_node
+
+            # Create the current node's. We return before if the node has already been created
+            for neighbor in node.neighbors: # neighbors of each copied node. Neighbors are also nodes so we run dfs to create the neighbors
+                created_neighbors = dfs(neighbor)
+                deep_node.neighbors.append(created_neighbors) # append to the 'neighbors' list as part of the Node object
+            
+            return deep_node
+            
+        if node is not None:
+            deep_copied_graph = dfs(node)
+
+        return deep_copied_graph
 
