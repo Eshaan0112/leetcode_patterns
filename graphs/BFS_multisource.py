@@ -113,3 +113,63 @@ def islandsAndTreasure(grid):
 
             distance += 1 # increment after each level as the nearest distance
             
+
+# Q2
+"""
+Description - https://neetcode.io/problems/islands-and-treasure?list=neetcode150
+Title - Rotten Oranges
+Level - Medium
+---------------------------------------
+Question - 
+-> Very similar to Q1
+-> An extra variable is needed to keep track of how many fresh fruits there so at the end we can check whether it is possible to traverse all fresh fruits or not
+
+Thoughts-
+-> Multisource BFS
+-> Time: O(m*n)
+"""
+def orangesRotting(grid):
+        # Setup
+        fresh = 1
+        empty = 0
+        rotten = 2
+        queue = deque() 
+        ROWS = len(grid)
+        COLS = len(grid[0])
+        fresh_count = 0 # number of fresh fruits to be made rotten - this is to check if it's possible to visit every fresh fruit in the grid from any rotten fruit
+
+        # Count fresh fruits and add rotten fruits as source for multisource BFS
+        for r in range(ROWS):
+            for c in range(COLS):
+                if grid[r][c] == fresh: 
+                    fresh_count += 1
+                elif grid[r][c] == rotten:
+                    queue.append([r,c])
+        
+        def branch(r,c):
+            nonlocal fresh_count
+            # Exit conditions
+            if r==ROWS or c==COLS or r<0 or c<0 or grid[r][c] == empty:
+                return 
+            
+            # Make fresh fruits rotten and traverse that level
+            if grid[r][c] == fresh: 
+                queue.append([r,c])
+                grid[r][c] = rotten
+                fresh_count -=1 # fresh fruit converted to rotten
+
+            
+        minimum_time = 0
+        while fresh_count and queue:
+            for level in range(len(queue)):
+                r,c = queue.popleft()
+
+                # branch outward in up/down/left/right directions
+                branch(r+1,c)
+                branch(r-1,c)
+                branch(r,c+1)
+                branch(r,c-1)
+            minimum_time+=1
+        
+        # If at the end, no fresh fruits remain, we have successfully traversed all fresh fruits
+        return minimum_time if fresh_count == 0 else -1
