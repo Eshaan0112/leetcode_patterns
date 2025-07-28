@@ -125,7 +125,7 @@ Question -
 -> An extra variable is needed to keep track of how many fresh fruits there so at the end we can check whether it is possible to traverse all fresh fruits or not
 
 Thoughts-
--> Multisource BFS
+-> Multisource BFS is optimal. Can do DFS as well, but the time complexity would be O(m*n*4^(m*n))
 -> Time: O(m*n)
 """
 def orangesRotting(grid):

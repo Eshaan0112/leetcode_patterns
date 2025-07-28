@@ -185,3 +185,88 @@ def cloneGraph(node):
 
         return deep_copied_graph
 
+# Q3
+"""
+Description - https://neetcode.io/problems/pacific-atlantic-water-flow?list=neetcode150
+Title - Pacific Atlantic Water Flow
+Level - Medium
+---------------------------------------
+Question - 
+-> Find elements in a grid that can reach pacific and atlantic, where pacific is top row and left column and atlantic is bottom row and right column
+-> We can traverse to another element if it is less than or equal to current element
+-> Eg:                 pppppppp 
+            p        [[4,2,7,3,4],a
+            p        [7,4,6,4,7], a
+            p        [6,3,5,3,6]] a
+                      aaaaaaaaa
+
+Soln: [[0,2],[0,4],[1,0],[1,1],[1,2],[1,3],[1,4],[2,0]]
+
+Thoughts - 
+-> Brute Force:
+    -> We can DFS starting from each element and check if it is going to pacific and atlantic
+    -> Time: O(m*n*4^(m*n))
+
+-> Optimal:
+    -> Elements in the first row and first column are adjacent to pacific ocean, so they can automatically reach it. 
+    -> Similarly for last row and last column (they're adjacent to atlantic)
+    -> What if, instead of going from each element in the grid, we reverse our thinking and find elements from the first row and first column that are traversible and do the same thing for last row and last column
+    -> This would allow us to find elements that reach atlantic from pacific and pacific from atlantic. The intersection of these elements can reach both.
+    -> NOTE: When we reverse our thinking - i.e go from ocean boundary to elements instead of elements to ocean boundary, the condition for traversal would also be reversed. 
+        -> Given condition was that we can traverse if the next element is <= current element (from element to ocean boundary) but now
+            next element must be >= current element
+    -> Time: O(m*n) --> visit each element once
+"""
+
+def pacificAtlantic(heights):
+
+        # Setup
+        ROWS, COLS = len(heights), len(heights[0])
+        pacific_visit, atlantic_visit = set(),set() # to keep track of elements that have been visited 
+        res = []
+
+        def dfs(r,c,visit,prev_height):
+            """
+            Visits elements from Pacific that can reach Atlantic and vice-versa.
+
+            Args:
+            prev_height maintains the height of the previous element to check whether traversal is possible. Starting value of
+            prev_height is itself since we search >= (opposite condition)
+            """
+
+            # Exit conditions
+            if r==ROWS or c==COLS or (r,c) in visit or r<0 or c<0 or heights[r][c] < prev_height:
+                return
+            
+            visit.add((r,c)) # currently traversing (r,c)
+
+            # 4 directional traversal
+            dfs(r+1,c,visit, prev_height=heights[r][c]) # up
+            dfs(r-1,c,visit, prev_height=heights[r][c]) # down
+            dfs(r,c+1,visit, prev_height=heights[r][c]) # left
+            dfs(r,c-1,visit, prev_height=heights[r][c]) # right
+            
+        # First row elements can reach pacific (0,c) and last row (ROWS-1,c) can reach atlantic
+        for c in range(COLS):
+           dfs(0,c, pacific_visit,prev_height=heights[0][c]) 
+           dfs(ROWS-1, c, atlantic_visit, prev_height=heights[ROWS-1][c])
+
+        # Last row elements can reach atlantic (r,0) and last column elements (COLS-1,c) can reach pacific
+        for r in range(ROWS):
+            dfs(r, 0, pacific_visit, heights[r][0])
+            dfs(r, COLS - 1, atlantic_visit, heights[r][COLS - 1])
+        
+        '''
+        At this point, we've added elements that can be reached from pacific->atlantic to pacific_visit set
+        and elements that can be reached from atlantic->pacific to atlantic_visit set. The elements that intersect between
+        the two sets are our solution
+        '''
+        for r in range(ROWS):
+            for c in range(COLS):
+                if (r,c) in pacific_visit and (r,c) in atlantic_visit:
+                    res.append([r,c])
+        
+        return res
+
+
+
