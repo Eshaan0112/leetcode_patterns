@@ -1,1 +1,3 @@
-https://leetcode.com/discuss/post/1337373/tree-question-pattern-2021-placement-by-t65qm/
+Tree subcategories: https://leetcode.com/discuss/post/1337373/tree-question-pattern-2021-placement-by-t65qm/
+
+Google Practice: https://docs.google.com/spreadsheets/d/1KkCeOIBwUFfKrHGGZe_6EJRCIqaM6MJBo0uSIMSD9bs/edit?gid=782922309#gid=782922309
