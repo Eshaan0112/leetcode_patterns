@@ -268,5 +268,90 @@ def pacificAtlantic(heights):
         
         return res
 
+# Q4
+"""
+Description - https://neetcode.io/problems/surrounded-regions?list=neetcode250
+Title - Surrounded Regions
+Level - Medium
+---------------------------------------
+Question - 
+-> Mark all surrounded regions of "O"s as "X"s
+-> The border "O"s (and connected "O"s to the border "O"s) are considered unsurrounded
+-> Eg:
+
+Input: board = [
+  ["X","X","X","X"],
+  ["X","O","O","X"],
+  ["X","O","O","X"],
+  ["X","X","X","O"]
+]
+
+Soln: [
+  ["X","X","X","X"],
+  ["X","X","X","X"],
+  ["X","X","X","X"],
+  ["X","X","X","O"]
+]
+
+Thoughts - 
+-> Brute Force:
+    -> Identify all surrounding regions and unsurrounded regions using DFS
+    -> Then change the surrounding regions to "X"s
+    -> This will take O(m*n) memory and O(m*n * 4^m*n) time
+
+-> Optimal:
+    -> Reverse thinking: Instead of getting surrounded regions, think of capturing everything but unsurrounded regions that are "O"s
+    Step1: Find all "O"s and their connected "O"s that are at the borders and mark them as "T" (to identify that these are unsurrounded)
+    Step2: Change every "O" that's left since every "O" that's left will be surrounded for sure
+    -> Time: O(m*n) --> visit every element once
+    """
+
+def solve(board):
+        # Setup
+        ROWS = len(board)
+        COLS = len(board[0])
+        visit = set()
+
+        def dfs(r,c):
+            # Exit conditions
+            if r == ROWS or c == COLS or r<0 or c<0 or (r,c) in visit or board[r][c] == "X":
+                return
+            
+            visit.add((r,c))
+            board[r][c] = "T"
+
+            # 4 directional traversal
+            dfs(r+1,c) # Up
+            dfs(r-1,c) # Down
+            dfs(r,c+1) # Right
+            dfs(r,c-1) # Left
 
 
+        # Mark Border "Os"
+        
+        # Top and Bottom border
+        for c in range(COLS):
+            if board[0][c] == "O":
+                dfs(0,c)
+            if board[ROWS-1][c] == "O":
+                dfs(ROWS-1,c)
+
+        # Right and Left border
+        for r in range(ROWS):
+            if board[r][0]:
+                dfs(r,0)
+            if board[r][COLS-1]:
+                dfs(r,COLS-1)
+        
+        # Change remaining "Os" in the board as "X" as we have marked "Os" that are unsurrounded with "T"
+        for r in range(ROWS):
+            for c in range(COLS):
+                if board[r][c] == "O":
+                    board[r][c] = "X"
+        
+        # Every surrounded region has been changed to X, but the "T"s we had put for unsurrounded region remains.
+        # We need to change them back to Os
+        for r in range(ROWS):
+            for c in range(COLS):
+                if board[r][c] == "T":
+                    board[r][c] = "O"
